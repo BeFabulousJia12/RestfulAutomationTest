@@ -1,0 +1,7 @@
+<<call_type>> <<call_stuff>> HTTP/1.1
+Host: <<host>>
+Authorization: <<AuthScheme>> <<AuthCreds>>
+Accpet: <<Accept>>
+Content-Type: <<Content-Type>>
+
+<<Body>>

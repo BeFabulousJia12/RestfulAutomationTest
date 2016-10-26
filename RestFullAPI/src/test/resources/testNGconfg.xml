@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Suite1">
+<test name="userlogon">
+  <parameter name="LogonBook" value="src/test/resources/Http_Logon_Data.xlsx" />
+    <classes>
+       <class name="com.iot.restfulAPI.userlogon"/>
+    </classes>
+</test>
+<test name="FunctionalTest">
+<parameter name="WorkBook" value="src/test/resources/Http_Request_Data.xlsx" />
+    <classes>
+       <class name="com.iot.restfulAPI.FunctionalTest">
+       <methods>
+        <include name="OTA" />
+		 <include name="api_test" />
+		<include name="CommandsValidation" />
+		</methods>
+		</class>
+    </classes>
+</test>
+</suite>
