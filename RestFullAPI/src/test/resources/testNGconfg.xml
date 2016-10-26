@@ -12,9 +12,9 @@
     <classes>
        <class name="com.iot.restfulAPI.FunctionalTest">
        <methods>
-        <include name="OTA" />
+        <!--<include name="OTA" />-->
 		 <include name="api_test" />
-		<include name="CommandsValidation" />
+		<!--<include name="CommandsValidation" />-->
 		</methods>
 		</class>
     </classes>
