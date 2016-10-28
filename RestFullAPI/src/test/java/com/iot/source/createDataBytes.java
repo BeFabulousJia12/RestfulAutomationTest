@@ -2,6 +2,7 @@ package com.iot.source;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -95,9 +96,14 @@ public class createDataBytes {
 	        boolean isFailed = true;
 	        try{
 	        dataReader = new BufferedReader(new FileReader(file));
+	        String line = dataReader.readLine();
+	        if(line == null)
+	        {
+	     	   isFailed =false;
+	        }
 	        while(true)
 	        {
-		        String line = dataReader.readLine();
+		        line = dataReader.readLine();
 		        if (line == null) {
 		            //throw new IOException(filename + ": unable to read line");
 		        	break;
@@ -107,8 +113,7 @@ public class createDataBytes {
 		        	isFailed = false;
 		        	//System.out.println("=======###Found###======");
 		         	break;
-		            }
-	        
+		         }
 	        }
 	    }catch (Exception e) {   
 	         e.printStackTrace();   
