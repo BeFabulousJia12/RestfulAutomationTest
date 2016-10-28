@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.io.IOUtils;
@@ -55,19 +56,21 @@ public class FunctionalTest implements ITest {
     private String contentString;
     private int statusCode;
     private String createTime;
+    private String modifyTime;
+    private String uuid;
     private String codeMsg;
-	static String logonResp = "2E 2E 06 01 00 00 00 00 01 80 36 79 39 70 00 00 01 00 08 00 00 00 00 00 00 00 00";
-	static String remoteDoorOpenResp = "2E 2E 82 FE 00 00 00 00 01 80 36 79 39 70 00 00 01 00 09 12 34 56 78 99 0A 80 01 01";
-	static String remoteDoorLockResp = "2E 2E 82 FE 00 00 00 00 01 80 36 79 39 70 00 00 01 00 09 12 34 56 78 99 0A 80 01 02";
-	static String remoteWindowleftOpenResp = "2E 2E 82 FE 00 00 00 00 01 80 36 79 39 70 00 00 01 00 0A 12 34 56 78 99 0A 80 02 01 01";
-	static String remoteWindowleftLockResp = "2E 2E 82 FE 00 00 00 00 01 80 36 79 39 70 00 00 01 00 0A 12 34 56 78 99 0A 80 02 01 02";
-	static String remoteWindowRightOpenResp = "2E 2E 82 FE 00 00 00 00 01 80 36 79 39 70 00 00 01 00 0A 12 34 56 78 99 0A 80 02 02 01";
-	static String remoteWindowRightLockResp = "2E 2E 82 FE 00 00 00 00 01 80 36 79 39 70 00 00 01 00 0A 12 34 56 78 99 0A 80 02 02 02";
-	static String remoteWindowLeftBackOpenResp = "2E 2E 82 FE 00 00 00 00 01 80 36 79 39 70 00 00 01 00 0A 12 34 56 78 99 0A 80 02 03 01";
-	static String remoteWindowLeftBackLockResp = "2E 2E 82 FE 00 00 00 00 01 80 36 79 39 70 00 00 01 00 0A 12 34 56 78 99 0A 80 02 03 02";
-	static String remoteWindowRightBackOpenResp = "2E 2E 82 FE 00 00 00 00 01 80 36 79 39 70 00 00 01 00 0A 12 34 56 78 99 0A 80 02 04 01";
-	static String remoteWindowRightBackLockResp = "2E 2E 82 FE 00 00 00 00 01 80 36 79 39 70 00 00 01 00 0A 12 34 56 78 99 0A 80 02 04 02";
-	static String remoteWindowWithoutActionResp = "2E 2E 82 FE 00 00 00 00 01 80 36 79 39 70 00 00 01 00 0A 12 34 56 78 99 0A 80 02 00 00";
+	static String logonResp = "2E 2E 06 01 00 00 00 00 01 90 73 61 73 35 00 00 01 00 08 00 00 00 00 00 00 00 00";
+	static String remoteDoorOpenResp = "2E 2E 82 FE 00 00 00 00 01 90 73 61 73 35 00 00 01 00 09 12 34 56 78 99 0A 80 01 01";
+	static String remoteDoorLockResp = "2E 2E 82 FE 00 00 00 00 01 90 73 61 73 35 00 00 01 00 09 12 34 56 78 99 0A 80 01 02";
+	static String remoteWindowleftOpenResp = "2E 2E 82 FE 00 00 00 00 01 90 73 61 73 35 00 00 01 00 0A 12 34 56 78 99 0A 80 02 01 01";
+	static String remoteWindowleftLockResp = "2E 2E 82 FE 00 00 00 00 01 90 73 61 73 35 00 00 01 00 0A 12 34 56 78 99 0A 80 02 01 02";
+	static String remoteWindowRightOpenResp = "2E 2E 82 FE 00 00 00 00 01 90 73 61 73 35 00 00 01 00 0A 12 34 56 78 99 0A 80 02 02 01";
+	static String remoteWindowRightLockResp = "2E 2E 82 FE 00 00 00 00 01 90 73 61 73 35 00 00 01 00 0A 12 34 56 78 99 0A 80 02 02 02";
+	static String remoteWindowLeftBackOpenResp = "2E 2E 82 FE 00 00 00 00 01 90 73 61 73 35 00 00 01 00 0A 12 34 56 78 99 0A 80 02 03 01";
+	static String remoteWindowLeftBackLockResp = "2E 2E 82 FE 00 00 00 00 01 90 73 61 73 35 00 00 01 00 0A 12 34 56 78 99 0A 80 02 03 02";
+	static String remoteWindowRightBackOpenResp = "2E 2E 82 FE 00 00 00 00 01 90 73 61 73 35 00 00 01 00 0A 12 34 56 78 99 0A 80 02 04 01";
+	static String remoteWindowRightBackLockResp = "2E 2E 82 FE 00 00 00 00 01 90 73 61 73 35 00 00 01 00 0A 12 34 56 78 99 0A 80 02 04 02";
+	static String remoteWindowWithoutActionResp = "2E 2E 82 FE 00 00 00 00 01 90 73 61 73 35 00 00 01 00 0A 12 34 56 78 99 0A 80 02 00 00";
 	
     public String getTestName() {
         return "API Test";
@@ -91,8 +94,8 @@ public class FunctionalTest implements ITest {
   	public Socket createTCP() throws UnknownHostException, IOException{
   		Socket socket=null;
   		System.out.println("=========TCP建立连接到终端=======");
-  		//socket = new Socket("10.1.64.229", 9001);
-  		socket = new Socket("125.69.151.39", 8856);
+  		socket = new Socket("10.1.64.224", 9001);
+  		//socket = new Socket("125.69.151.39", 8856);
   		return socket;
   	}
   	
@@ -107,11 +110,11 @@ public class FunctionalTest implements ITest {
 				//给服务端发送响应信息
 				OutputStream os=socket.getOutputStream();
 				List<String> array = new ArrayList<String>();
-				//String logonString = "2E 2E 06 FE 00 00 00 00 06 05 04 03 02 01 00 00 01 00 2D 61 62 63 64 65 66 67 68 69 6A 6B 6C 31 32 33 34 35 36 37 38 39 30 30 30 30 30 30 30 30 31 2E 30 30 61 62 63 64 30 30 30 30 30 30 00 01";
-				String logonString ="2E 2E 06 FE 00 00 00 00 01 80 36 79 39 70 00 00 01 00 2D 61 62 63 64 65 66 67 68 69 6A 6B 6C 31 32 33 34 35 36 37 38 39 30 30 30 30 30 30 30 30 31 2E 30 30 61 62 63 64 30 30 30 30 30 30 00 01";
+				String logonString ="2E 2E 06 FE 00 00 00 00 01 90 73 61 73 35 00 00 01 00 2D 61 62 63 64 65 66 67 68 69 6A 6B 6C 52 48 48 48 51 36 37 38 39 30 30 30 30 30 30 30 30 31 2E 30 30 61 62 63 64 30 30 30 30 30 30 00 01";
 				array.add(logonString);
 				//终端需要登录
 				byte[] request = createDataBytes.requestBytes(array.get(0));
+				System.out.println("登录:" + logonString);
 				os.write(request);
 				InputStream is=socket.getInputStream(); 
 			    while((len=(is.read(b)))>0){
@@ -659,7 +662,7 @@ public class FunctionalTest implements ITest {
     @Test()
     public void CommandsValidation() throws IOException
     {	//查询result里面是否有错误消息
-    	createDataBytes.readlinesfromtestresultfile("Failed");
+    	Assert.assertTrue(createDataBytes.readlinesfromtestresultfile("Failed"));
     }
     @Test(dataProvider = "WorkBookData", description = "ReqGenTest")
     public void api_test(String ID, String test_case) {
@@ -697,13 +700,27 @@ public class FunctionalTest implements ITest {
 	               json.put("content", content);
 	               json.put("code", statusCode);
 	               json.put("code_msg", codeMsg);
-	               //createtime字段替换成当前时间
-	               JSONObject jsonpart = json.getJSONObject("content").getJSONObject("result").getJSONArray("rows").getJSONObject(0);
-	               createTime = jsonpart.getString("createTime");
-	               System.out.println("createTimes： " + createTime);
+
+	               JSONArray jsonpart1 = json.getJSONObject("content").getJSONObject("result").getJSONArray("rows");
 	               JSONObject jsonbase = JSONObject.fromObject(baseline_message);
-	               JSONObject arr = jsonbase.getJSONObject("content").getJSONObject("result").getJSONArray("rows").getJSONObject(0);
-	               arr.put("createTime", createTime);
+	             //createtime字段替换成当前时间
+	               for(int i=0;i<jsonpart1.size();i++){
+	            	   JSONObject jsonpart= jsonpart1.getJSONObject(i);
+		               JSONObject arr = jsonbase.getJSONObject("content").getJSONObject("result").getJSONArray("rows").getJSONObject(i);
+		               createTime = jsonpart.getString("createTime");
+		               if(jsonpart.containsKey("modifyTime"))
+		               {
+		            	   modifyTime = jsonpart.getString("modifyTime");
+		            	   arr.put("modifyTime", modifyTime);
+		            	   System.out.println("modifyTime： " + modifyTime);
+		               }
+		               
+		               uuid = jsonpart.getString("uuid");
+		               System.out.println("createTimes： " + createTime);
+		               arr.put("createTime", createTime);
+		               arr.put("uuid", uuid);
+	               }
+	              
 	               baseline_message= jsonbase.toString();
 	               System.out.println("newbaseline msg： " + baseline_message);
 	               System.out.println("期望得到的响应： "+ baseline_message);
